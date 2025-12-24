@@ -1,6 +1,6 @@
-name: flutter_application_1
+name: fileats
 description: "A new Flutter project."
-publish_to: 'none'
+publish_to: "none"
 version: 0.1.0
 
 environment:
@@ -13,7 +13,6 @@ dependencies:
   flutter_color:
   flutter_native_splash: ^2.4.4
   provider: ^6.1.2
-
 
 dev_dependencies:
   flutter_test:
@@ -33,7 +32,7 @@ flutter:
   fonts:
     - family: Gabarito
       fonts:
-      - asset: fonts/Gabarito-VariableFont_wght.ttf
+        - asset: fonts/Gabarito-VariableFont_wght.ttf
 
   assets:
     - images/assets/fileat_logo.png
@@ -72,4 +71,3 @@ flutter:
     - images/assets/avatarToko/wrung_bindah.jpg
     - images/assets/avatarToko/wrung_m_elly.jpg
     - images/assets/avatarToko/comingsoon.jpg
-    

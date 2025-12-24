@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/pages/fileat_communitypage1.dart';
-import 'package:flutter_application_1/pages/fileat_profile1.dart';
+import 'package:fileats/pages/fileat_communitypage1.dart';
+import 'package:fileats/pages/fileat_profile1.dart';
 
 class FileatHomePage1 extends StatefulWidget {
   static const routeName = '/fileat-homepage1';
   @override
-  _FileatHomePage1State createState() => _FileatHomePage1State();
+  FileatHomePage1State createState() => FileatHomePage1State();
 }
 
-class _FileatHomePage1State extends State<FileatHomePage1> {
+class FileatHomePage1State extends State<FileatHomePage1> {
   int _currentIndex = 0;
 
   final List<Widget> _pages = [
@@ -21,105 +21,105 @@ class _FileatHomePage1State extends State<FileatHomePage1> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: _currentIndex == 0
-        ? AppBar(
-          backgroundColor: Colors.white,
-          elevation: 0,
-          iconTheme: IconThemeData(color: Colors.black),
-          title: Image.asset("images/assets/FILeats.png"),
-          bottom: PreferredSize(
-            preferredSize: Size.fromHeight(60.0),
-            child: Align(
-              alignment: Alignment.centerLeft,
-              child: Padding(
-                padding: const EdgeInsets.only(left: 20.0, bottom: 10.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      "Apa yang ingin kamu",
-                      style: TextStyle(
-                        color: Colors.black,
-                        fontSize: 20.0,
-                        fontWeight: FontWeight.bold,
-                        fontFamily: "Gabarito",
-                      ),
+      appBar: _currentIndex == 0
+          ? AppBar(
+              backgroundColor: Colors.white,
+              elevation: 0,
+              iconTheme: IconThemeData(color: Colors.black),
+              title: Image.asset("images/assets/FILeats.png"),
+              bottom: PreferredSize(
+                preferredSize: Size.fromHeight(60.0),
+                child: Align(
+                  alignment: Alignment.centerLeft,
+                  child: Padding(
+                    padding: const EdgeInsets.only(left: 20.0, bottom: 10.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          "Apa yang ingin kamu",
+                          style: TextStyle(
+                            color: Colors.black,
+                            fontSize: 20.0,
+                            fontWeight: FontWeight.bold,
+                            fontFamily: "Gabarito",
+                          ),
+                        ),
+                        Text(
+                          "makan hari ini?",
+                          style: TextStyle(
+                            color: Colors.black,
+                            fontSize: 20.0,
+                            fontWeight: FontWeight.bold,
+                            fontFamily: "Gabarito",
+                          ),
+                        ),
+                      ],
                     ),
-                    Text(
-                      "makan hari ini?",
-                      style: TextStyle(
-                        color: Colors.black,
-                        fontSize: 20.0,
-                        fontWeight: FontWeight.bold,
-                        fontFamily: "Gabarito",
-                      ),
-                    ),
-                  ],
+                  ),
                 ),
               ),
+            )
+          : null,
+      body: _pages[_currentIndex],
+      bottomNavigationBar: BottomNavigationBar(
+        backgroundColor: Color(0xffEC831E),
+        currentIndex: _currentIndex,
+        items: [
+          BottomNavigationBarItem(
+            icon: Image.asset(
+              _currentIndex == 0
+                  ? "images/navbar/s_Home.png"
+                  : "images/navbar/Home.png",
+              width: 24,
+              height: 24,
             ),
+            label: 'Home',
           ),
-        )
-        : null,
-        body: _pages[_currentIndex],
-        bottomNavigationBar: BottomNavigationBar(
-          backgroundColor: Color(0xffEC831E),
-          currentIndex: _currentIndex,
-          items: [
-            BottomNavigationBarItem(
-              icon: Image.asset(
-                _currentIndex == 0
-                    ? "images/navbar/s_Home.png" 
-                    : "images/navbar/Home.png", 
-                width: 24,
-                height: 24,
-              ),
-              label: 'Home',
+          BottomNavigationBarItem(
+            icon: Image.asset(
+              _currentIndex == 1
+                  ? "images/navbar/s_Community.png"
+                  : "images/navbar/Community.png",
+              width: 24,
+              height: 24,
             ),
-            BottomNavigationBarItem(
-              icon: Image.asset(
-                _currentIndex == 1
-                    ? "images/navbar/s_Community.png"
-                    : "images/navbar/Community.png",
-                width: 24,
-                height: 24,
-              ),
-              label: 'Community',
+            label: 'Community',
+          ),
+          BottomNavigationBarItem(
+            icon: Image.asset(
+              _currentIndex == 2
+                  ? "images/navbar/s_orders.png"
+                  : "images/navbar/orders.png",
+              width: 24,
+              height: 24,
             ),
-            BottomNavigationBarItem(
-              icon: Image.asset(
-                _currentIndex == 2
-                    ? "images/navbar/s_orders.png"
-                    : "images/navbar/orders.png",
-                width: 24,
-                height: 24,
-              ),
-              label: 'Orders',
+            label: 'Orders',
+          ),
+          BottomNavigationBarItem(
+            icon: Image.asset(
+              _currentIndex == 3
+                  ? "images/navbar/s_Profile.png"
+                  : "images/navbar/Profile.png",
+              width: 24,
+              height: 24,
             ),
-            BottomNavigationBarItem(
-              icon: Image.asset(
-                _currentIndex == 3
-                    ? "images/navbar/s_Profile.png"
-                    : "images/navbar/Profile.png",
-                width: 24,
-                height: 24,
-              ),
-              label: 'Profile',
-            ),
-          ],
-          selectedItemColor: Color(0xff002240),
-          unselectedItemColor: Color(0xffffffff),
-          type: BottomNavigationBarType.fixed,
-          selectedLabelStyle:
-              TextStyle(fontFamily: "Gabarito", fontWeight: FontWeight.bold),
-          unselectedLabelStyle:
-              TextStyle(fontFamily: "Gabarito", fontWeight: FontWeight.w100),
-          onTap: (index) {
-            setState(() {
-              _currentIndex = index;
-            });
-          },
-        ),
+            label: 'Profile',
+          ),
+        ],
+        selectedItemColor: Color(0xff002240),
+        unselectedItemColor: Color(0xffffffff),
+        type: BottomNavigationBarType.fixed,
+        selectedLabelStyle:
+            TextStyle(fontFamily: "Gabarito", fontWeight: FontWeight.bold),
+        unselectedLabelStyle:
+            TextStyle(fontFamily: "Gabarito", fontWeight: FontWeight.w100),
+        onTap: (index) {
+          setState(() {
+            _currentIndex = index;
+          });
+        },
+      ),
     );
   }
 }
@@ -334,7 +334,10 @@ class FileatHomePage1Body extends StatelessWidget {
         children: [
           Text(
             name,
-            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20.0, fontFamily: "Gabarito"),
+            style: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 20.0,
+                fontFamily: "Gabarito"),
           ),
           // SingleChildScrollView untuk scroll horizontal pada menu restoran
           SingleChildScrollView(
