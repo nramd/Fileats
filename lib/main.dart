@@ -1,117 +1,104 @@
 import 'package:flutter/material.dart';
-import 'package:fileats/presentation/screens/buyer/home_screen.dart.dart';
-import 'package:fileats/presentation/screens/auth/login_screen.dart';
-import 'package:fileats/presentation/screens/auth/register_screen.dart.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
-import 'presentation/screens/fileat_feed_model.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'firebase_options.dart';
 
-void main() {
-  runApp(
-    ChangeNotifierProvider(
-      create: (context) => FeedModel(),
-      child: MaterialApp(
-        debugShowCheckedModeBanner: false,
-        home: FileatSplashh(),
-        routes: {
-          LoginPagePembeli.routeName: (context) => LoginPagePembeli(),
-          LoginPagePenjual.routeName: (context) => LoginPagePenjual(),
-          SignPageFileat.routeName: (context) => SignPageFileat(),
-          FileatHomePage1.routeName: (context) => FileatHomePage1(),
-          FileatSplashh.routeName: (context) => FileatSplashh(),
-        },
-      ),
+// Core
+import 'core/theme/app_theme.dart';
+import 'core/constants/app_constants.dart';
+
+// Providers
+import 'providers/auth_provider.dart';
+import 'providers/cart_provider.dart';
+import 'providers/order_provider.dart';
+import 'providers/community_provider.dart';
+import 'providers/tenant_provider.dart';
+
+// Screens
+import 'presentation/screens/splash_screen.dart';
+import 'presentation/screens/auth/login_screen.dart';
+import 'presentation/screens/auth/register_screen.dart';
+import 'presentation/screens/buyer/buyer_main_screen.dart';
+import 'presentation/screens/buyer/tenant_detail_screen.dart';
+import 'presentation/screens/buyer/cart_screen.dart';
+import 'presentation/screens/buyer/checkout_screen.dart';
+import 'presentation/screens/buyer/order_tracking_screen.dart';
+import 'presentation/screens/seller/seller_main_screen.dart';
+
+void main() async {
+  WidgetsFlutterBinding. ensureInitialized();
+  
+  // Initialize Firebase
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+  
+  // Set preferred orientations
+  await SystemChrome.setPreferredOrientations([
+    DeviceOrientation.portraitUp,
+    DeviceOrientation.portraitDown,
+  ]);
+  
+  // Set system UI overlay style
+  SystemChrome.setSystemUIOverlayStyle(
+    const SystemUiOverlayStyle(
+      statusBarColor: Colors. transparent,
+      statusBarIconBrightness: Brightness. dark,
+      systemNavigationBarColor: Colors.white,
+      systemNavigationBarIconBrightness: Brightness.dark,
     ),
   );
+  
+  runApp(const MyApp());
 }
 
-class FileatSplashh extends StatelessWidget {
-  static const routeName = '/splash';
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Container(
-        color: Colors.white,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            SizedBox(height: 190),
-            Image.asset("images/assets/role.png"),
-            SizedBox(height: 20),
-            Text(
-              "Gunakan Aplikasi",
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                fontFamily: "Gabarito",
-                fontSize: 25,
-                color: Color(0xffED831F),
-              ),
-            ),
-            Text(
-              "Sebagai?",
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                fontFamily: "Gabarito",
-                fontSize: 25,
-                color: Color(0xffED831F),
-              ),
-            ),
-            SizedBox(height: 40),
-            Center(
-              child: ElevatedButton(
-                onPressed: () {
-                  Navigator.pushNamed(
-                    context,
-                    LoginPagePenjual.routeName,
-                  );
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Color(0xFF002647),
-                  minimumSize: Size(343, 56),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                ),
-                child: Text(
-                  "Penjual",
-                  style: TextStyle(
-                    fontSize: 16,
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
-                    fontFamily: "Gabarito",
-                  ),
-                ),
-              ),
-            ),
-            SizedBox(height: 20),
-            Center(
-              child: ElevatedButton(
-                onPressed: () {
-                  Navigator.pushNamed(
-                    context,
-                    LoginPagePembeli.routeName,
-                  );
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Color(0xFFFFFFFF),
-                  minimumSize: Size(343, 56),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10),
-                    side: BorderSide(color: Color(0xff002647)),
-                  ),
-                ),
-                child: Text(
-                  "Pembeli",
-                  style: TextStyle(
-                    fontSize: 16,
-                    color: Color(0xff002647),
-                    fontWeight: FontWeight.bold,
-                    fontFamily: "Gabarito",
-                  ),
-                ),
-              ),
-            ),
-          ],
-        ),
+    return MultiProvider(
+      providers:  [
+        ChangeNotifierProvider(create: (_) => AuthProvider()),
+        ChangeNotifierProvider(create: (_) => CartProvider()),
+        ChangeNotifierProvider(create: (_) => OrderProvider()),
+        ChangeNotifierProvider(create: (_) => CommunityProvider()),
+        ChangeNotifierProvider(create: (_) => TenantProvider()),
+      ],
+      child: MaterialApp(
+        title: AppConstants.appName,
+        debugShowCheckedModeBanner: false,
+        theme: AppTheme.lightTheme,
+        initialRoute: '/',
+        routes: {
+          '/': (context) => const SplashScreen(),
+          '/login': (context) => const LoginScreen(),
+          '/register': (context) => const RegisterScreen(),
+          '/buyer-main': (context) => const BuyerMainScreen(),
+          '/tenant-detail': (context) => const TenantDetailScreen(),
+          '/cart': (context) => const CartScreen(),
+          '/checkout': (context) => const CheckoutScreen(),
+          '/order-tracking': (context) => const OrderTrackingScreen(),
+          '/seller-main': (context) => const SellerMainScreen(),
+        },
+        onGenerateRoute: (settings) {
+          // Handle routes with arguments
+          switch (settings.name) {
+            case '/order-tracking':
+              final orderId = settings.arguments as String? ;
+              return MaterialPageRoute(
+                builder: (context) => OrderTrackingScreen(orderId: orderId),
+              );
+            default:
+              return null;
+          }
+        },
+        onUnknownRoute: (settings) {
+          return MaterialPageRoute(
+            builder: (context) => const SplashScreen(),
+          );
+        },
       ),
     );
   }

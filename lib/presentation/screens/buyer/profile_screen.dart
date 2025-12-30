@@ -1,192 +1,215 @@
 import 'package:flutter/material.dart';
-import 'package:fileats/main.dart';
+import 'package:provider/provider.dart';
+import '../../../core/constants/app_colors.dart';
+import '../../../core/constants/app_typography.dart';
+import '../../../core/constants/app_constants.dart';
+import '../../../providers/auth_provider.dart';
+import '../../widgets/common/custom_button.dart';
 
-void main() {
-  runApp(MyApp());
-}
+class ProfileScreen extends StatelessWidget {
+  const ProfileScreen({super.key});
 
-class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: ProfilePage1(),
-    );
-  }
-}
+    final authProvider = context.watch<AuthProvider>();
+    final user = authProvider.currentUser;
 
-class ProfilePage1 extends StatefulWidget {
-  @override
-  State<ProfilePage1> createState() => _ProfilePage1State();
-}
-
-class _ProfilePage1State extends State<ProfilePage1> {
-  @override
-  Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: AppColors.background,
       appBar: AppBar(
+        title: const Text('Profil'),
+        backgroundColor: AppColors.white,
+        foregroundColor: AppColors.primary900,
+        elevation: 0,
         automaticallyImplyLeading: false,
-        toolbarHeight: 110,
-        backgroundColor: Colors.white,
-        title: Padding(
-          padding: const EdgeInsets.only(left: 8, top: 40),
-          child: Row(
-            children: [
-              CircleAvatar(
-                backgroundColor: Colors.transparent,
-                child: Icon(Icons.account_circle_outlined,
-                    size: 52, color: Colors.black),
-              ),
-              SizedBox(
-                width: 20,
-              ),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    'User2137123',
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontFamily: "Gabarito",
-                      fontSize: 18,
-                      color: Colors.black,
+      ),
+      body: SingleChildScrollView(
+        child:  Column(
+          children: [
+            // Profile Header
+            Container(
+              width: double.infinity,
+              padding: const EdgeInsets.all(AppConstants.paddingScreen),
+              color: AppColors.white,
+              child: Column(
+                children:  [
+                  CircleAvatar(
+                    radius: 50,
+                    backgroundColor: AppColors.primary900,
+                    child: Text(
+                      user?.name. isNotEmpty == true ? user!.name[0].toUpperCase() : 'U',
+                      style: AppTypography.heading2.copyWith(color: AppColors.white),
                     ),
                   ),
-                  SizedBox(
-                    height: 5,
-                  ),
+                  const SizedBox(height: 16),
+                  Text(user?.name ?? 'User', style: AppTypography.heading5),
+                  const SizedBox(height: 4),
                   Text(
-                    'User2137123@gmail.com',
-                    style: TextStyle(
-                      fontWeight: FontWeight.normal,
-                      fontFamily: "Gabarito",
-                      fontSize: 14,
-                      color: Color(0xff757575),
+                    user?.email ?? '',
+                    style: AppTypography.bodyMedium.copyWith(color: AppColors.grey600),
+                  ),
+                  const SizedBox(height: 8),
+                  Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+                    decoration: BoxDecoration(
+                      color: AppColors.accent400. withOpacity(0.2),
+                      borderRadius: BorderRadius.circular(AppConstants.radiusFull),
+                    ),
+                    child: Text(
+                      user?.isBuyer == true ? 'Pembeli' : 'Penjual',
+                      style: AppTypography.labelSmall.copyWith(color: AppColors.primary900),
                     ),
                   ),
-                  SizedBox(
-                    height: 5,
-                  ),
-                  Text(
-                    '+62 812 3456 7890',
-                    style: TextStyle(
-                      fontWeight: FontWeight.normal,
-                      fontFamily: "Gabarito",
-                      fontSize: 14,
-                      color: Color(0xff757575),
-                    ),
-                  )
                 ],
               ),
-              SizedBox(
-                width: 115,
-              ),
-              InkWell(
-                child: Container(
-                  color: Colors.transparent,
-                  child: Image.asset("images/assets/rightArrow.png"),
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
-      body: Container(
-        color: Colors.white,
-        child: ListView(
-          children: [
-            ListTile(
-              contentPadding: EdgeInsets.only(left: 35, top: 30),
-              title: Text(
-                "Riwayat Pemesanan",
-                style: TextStyle(
-                    fontFamily: "Gabarito",
-                    fontSize: 16,
-                    fontWeight: FontWeight.normal),
-              ),
-              leading: Icon(
-                Icons.history_toggle_off_rounded,
-                size: 36,
-              ),
-              onTap: () {
-                return;
-              },
             ),
-            ListTile(
-              contentPadding: EdgeInsets.only(left: 35, top: 20),
-              title: Text(
-                "Favorit",
-                style: TextStyle(
-                    fontFamily: "Gabarito",
-                    fontSize: 16,
-                    fontWeight: FontWeight.normal),
+            const SizedBox(height: 8),
+            // Menu Items
+            Container(
+              color: AppColors.white,
+              child: Column(
+                children: [
+                  _buildMenuItem(
+                    icon: Icons.person_outline,
+                    title:  'Edit Profil',
+                    onTap: () {},
+                  ),
+                  _buildMenuItem(
+                    icon:  Icons.lock_outline,
+                    title: 'Ubah Password',
+                    onTap: () {},
+                  ),
+                  _buildMenuItem(
+                    icon: Icons.notifications_outlined,
+                    title: 'Notifikasi',
+                    onTap: () {},
+                  ),
+                  _buildMenuItem(
+                    icon: Icons. help_outline,
+                    title:  'Bantuan',
+                    onTap: () {},
+                  ),
+                  _buildMenuItem(
+                    icon: Icons.info_outline,
+                    title:  'Tentang Aplikasi',
+                    onTap:  () => _showAboutDialog(context),
+                  ),
+                ],
               ),
-              leading: Icon(
-                Icons.favorite,
-                size: 36,
-              ),
-              onTap: () {
-                return;
-              },
             ),
-            ListTile(
-              contentPadding: EdgeInsets.only(left: 35, top: 20),
-              title: Text(
-                "Bantuan",
-                style: TextStyle(
-                    fontFamily: "Gabarito",
-                    fontSize: 16,
-                    fontWeight: FontWeight.normal),
+            const SizedBox(height: 8),
+            // Logout
+            Container(
+              width: double.infinity,
+              padding: const EdgeInsets.all(AppConstants.paddingScreen),
+              color: AppColors.white,
+              child: CustomButton(
+                text: 'Keluar',
+                onPressed: () => _showLogoutDialog(context, authProvider),
+                type: ButtonType.outline,
+                textColor: AppColors.error,
+                backgroundColor: AppColors.error,
               ),
-              leading: Icon(
-                Icons.help,
-                size: 36,
-              ),
-              onTap: () {
-                return;
-              },
             ),
-            ListTile(
-              contentPadding: EdgeInsets.only(left: 35, top: 20),
-              title: Text(
-                "Pengaturan",
-                style: TextStyle(
-                    fontFamily: "Gabarito",
-                    fontSize: 16,
-                    fontWeight: FontWeight.normal),
-              ),
-              leading: Icon(
-                Icons.settings,
-                size: 36,
-              ),
-              onTap: () {
-                return;
-              },
+            const SizedBox(height: 24),
+            // App Version
+            Text(
+              'FILeats v1.0.0',
+              style: AppTypography.caption.copyWith(color: AppColors.grey500),
             ),
-            ListTile(
-              contentPadding: EdgeInsets.only(left: 35, top: 20),
-              title: Text(
-                "Log Out",
-                style: TextStyle(
-                    fontFamily: "Gabarito",
-                    fontSize: 16,
-                    fontWeight: FontWeight.normal,
-                    color: Colors.red),
-              ),
-              leading: Icon(
-                Icons.logout,
-                color: Colors.red,
-                size: 36,
-              ),
-              onTap: () {
-                Navigator.of(context).pushAndRemoveUntil(
-                  MaterialPageRoute(builder: (context) => FileatSplashh()),
-                  (route) => false,
-                );
-              },
+            const SizedBox(height:  8),
+            Text(
+              AppConstants.tagline,
+              style: AppTypography.caption.copyWith(color: AppColors.grey400),
             ),
+            const SizedBox(height: 24),
           ],
         ),
+      ),
+    );
+  }
+
+  Widget _buildMenuItem({
+    required IconData icon,
+    required String title,
+    required VoidCallback onTap,
+  }) {
+    return ListTile(
+      leading: Icon(icon, color: AppColors. primary900),
+      title: Text(title, style: AppTypography.bodyMedium),
+      trailing: const Icon(Icons.chevron_right, color: AppColors.grey400),
+      onTap: onTap,
+    );
+  }
+
+  void _showLogoutDialog(BuildContext context, AuthProvider authProvider) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Keluar'),
+        content: const Text('Apakah Anda yakin ingin keluar?'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Batal'),
+          ),
+          TextButton(
+            onPressed: () async {
+              await authProvider.signOut();
+              if (context.mounted) {
+                Navigator. pushNamedAndRemoveUntil(context, '/login', (route) => false);
+              }
+            },
+            child: Text('Keluar', style: TextStyle(color: AppColors.error)),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _showAboutDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title:  Row(
+          children: [
+            Container(
+              padding: const EdgeInsets.all(8),
+              decoration: BoxDecoration(
+                color: AppColors.accent400,
+                borderRadius: BorderRadius. circular(8),
+              ),
+              child:  const Icon(Icons.restaurant_menu, color: AppColors. primary900),
+            ),
+            const SizedBox(width: 12),
+            const Text('FILeats'),
+          ],
+        ),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(AppConstants.tagline, style: AppTypography.bodyMedium),
+            const SizedBox(height: 16),
+            Text(
+              'Aplikasi pemesanan makanan untuk kantin FILKOM Universitas Brawijaya.',
+              style: AppTypography. bodySmall. copyWith(color: AppColors. grey600),
+            ),
+            const SizedBox(height: 16),
+            Text('Tim Pengembang:', style: AppTypography.labelMedium),
+            const SizedBox(height: 8),
+            Text('• Arif Athaya Harahap', style: AppTypography.bodySmall),
+            Text('• Nugrah Ramadhani', style: AppTypography.bodySmall),
+            Text('• Ariiq Tsany Zu', style: AppTypography.bodySmall),
+            Text('• Muhammad Faiz Fauzan', style: AppTypography.bodySmall),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Tutup'),
+          ),
+        ],
       ),
     );
   }
