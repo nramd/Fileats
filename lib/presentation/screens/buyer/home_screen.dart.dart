@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:fileats/pages/fileat_communitypage1.dart';
-import 'package:fileats/pages/fileat_profile1.dart';
+import 'package:fileats/presentation/screens/buyer/community_screen.dart';
+import 'package:fileats/presentation/screens/buyer/profile_screen.dart';
 
 class FileatHomePage1 extends StatefulWidget {
   static const routeName = '/fileat-homepage1';

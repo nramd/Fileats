@@ -1,7 +1,7 @@
 name: fileats
-description: "A new Flutter project."
+description: "FILeats - No Worry, No Antri, Just Feel It"
 publish_to: "none"
-version: 0.1.0
+version: 1.0.0+1
 
 environment:
   sdk: ^3.6.0
@@ -9,22 +9,22 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  faker: ^2.2.0
-  flutter_color:
-  flutter_native_splash: ^2.4.4
+  cupertino_icons: ^1.0.8
   provider: ^6.1.2
+  firebase_core: ^3.8.1
+  firebase_auth: ^5.3.4
+  cloud_firestore: ^5.6.0
+  firebase_storage: ^12.4.0
+  cached_network_image: ^3.4.1
+  intl: ^0.19.0
+  google_fonts: ^6.2.1
+  shimmer: ^3.0.0
+  fluttertoast: ^8.2.8
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^5.0.0
-
-flutter_native_splash:
-  color: "#FFFFFF"
-  image: "images/assets/splashScreen1.png"
-  android: true
-  ios: true
-  web: true
 
 flutter:
   uses-material-design: true
@@ -35,39 +35,39 @@ flutter:
         - asset: fonts/Gabarito-VariableFont_wght.ttf
 
   assets:
-    - images/assets/fileat_logo.png
-    - images/assets/Google_logo.png
-    - images/assets/back_button.png
-    - images/assets/role.png
-    - images/assets/FILeats.png
-    - images/assets/communities.png
-    - images/assets/rightArrow.png
-    - images/homepage_menumakan/fileat_kue.png
-    - images/homepage_menumakan/fileat_mie.png
-    - images/homepage_menumakan/fileat_minuman.png
-    - images/homepage_menumakan/fileat_nasi.png
-    - images/homepage_menumakan/fileat_snack.png
-    - images/navbar/Community.png
-    - images/navbar/s_Community.png
-    - images/navbar/Home.png
-    - images/navbar/s_Home.png
-    - images/navbar/orders.png
-    - images/navbar/s_orders.png
-    - images/navbar/Profile.png
-    - images/navbar/s_Profile.png
-    - images/menumakan_toko/n_a_Bakar.jpg
-    - images/menumakan_toko/n_a_Crispy.jpg
-    - images/menumakan_toko/n_a_ungkep.jpg
-    - images/menumakan_toko/n_gila.jpg
-    - images/menumakan_toko/n_goreng.jpg
-    - images/menumakan_toko/n_KulitAyam.jpg
-    - images/menumakan_toko/n_kuning.jpg
-    - images/menumakan_toko/n_padang.jpg
-    - images/menumakan_toko/n_usus.jpg
-    - images/menumakan_toko/indomie_g.jpg
-    - images/menumakan_toko/indomie_k.jpg
-    - images/menumakan_toko/mie_ayam.jpg
-    - images/assets/avatarToko/wrung_bangdor.jpg
-    - images/assets/avatarToko/wrung_bindah.jpg
-    - images/assets/avatarToko/wrung_m_elly.jpg
-    - images/assets/avatarToko/comingsoon.jpg
+    - assets/images/assets/fileat_logo.png
+    - assets/images/assets/Google_logo.png
+    - assets/images/assets/back_button.png
+    - assets/images/assets/role.png
+    - assets/images/assets/FILeats.png
+    - assets/images/assets/communities.png
+    - assets/images/assets/rightArrow.png
+    - assets/images/homepage_menumakan/fileat_kue.png
+    - assets/images/homepage_menumakan/fileat_mie.png
+    - assets/images/homepage_menumakan/fileat_minuman.png
+    - assets/images/homepage_menumakan/fileat_nasi.png
+    - assets/images/homepage_menumakan/fileat_snack.png
+    - assets/images/navbar/Community.png
+    - assets/images/navbar/s_Community.png
+    - assets/images/navbar/Home.png
+    - assets/images/navbar/s_Home.png
+    - assets/images/navbar/orders.png
+    - assets/images/navbar/s_orders.png
+    - assets/images/navbar/Profile.png
+    - assets/images/navbar/s_Profile.png
+    - assets/images/menumakan_toko/n_a_Bakar.jpg
+    - assets/images/menumakan_toko/n_a_Crispy.jpg
+    - assets/images/menumakan_toko/n_a_ungkep.jpg
+    - assets/images/menumakan_toko/n_gila.jpg
+    - assets/images/menumakan_toko/n_goreng.jpg
+    - assets/images/menumakan_toko/n_KulitAyam.jpg
+    - assets/images/menumakan_toko/n_kuning.jpg
+    - assets/images/menumakan_toko/n_padang.jpg
+    - assets/images/menumakan_toko/n_usus.jpg
+    - assets/images/menumakan_toko/indomie_g.jpg
+    - assets/images/menumakan_toko/indomie_k.jpg
+    - assets/images/menumakan_toko/mie_ayam.jpg
+    - assets/images/assets/avatarToko/wrung_bangdor.jpg
+    - assets/images/assets/avatarToko/wrung_bindah.jpg
+    - assets/images/assets/avatarToko/wrung_m_elly.jpg
+    - assets/images/assets/avatarToko/comingsoon.jpg

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'fileat_feed_model.dart';
+import '../fileat_feed_model.dart';
 
 // void main() {
 //   runApp(CommunityPage1());

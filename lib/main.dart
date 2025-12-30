@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:fileats/pages/fileat_homepage1.dart';
-import 'package:fileats/pages/fileat_login_page.dart';
-import 'package:fileats/pages/fileat_sign_up.dart';
+import 'package:fileats/presentation/screens/buyer/home_screen.dart.dart';
+import 'package:fileats/presentation/screens/auth/login_screen.dart';
+import 'package:fileats/presentation/screens/auth/register_screen.dart.dart';
 import 'package:provider/provider.dart';
-import 'pages/fileat_feed_model.dart';
+import 'presentation/screens/fileat_feed_model.dart';
 
 void main() {
   runApp(
