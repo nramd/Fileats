@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart' hide Order;
 import '../models/order.dart';
-import '../models/cart_item.dart'; // Pastikan import CartItem ada
+import '../models/cart_item.dart';
 
 class OrderProvider extends ChangeNotifier {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
@@ -10,21 +10,18 @@ class OrderProvider extends ChangeNotifier {
 
   List<Order> get orders => _orders;
 
-  // Filter: Pesanan yang masih aktif
   List<Order> get activeOrders => _orders
       .where((order) =>
           order.status != OrderStatus.selesai &&
           order.status != OrderStatus.dibatalkan)
       .toList();
 
-  // Filter: Pesanan riwayat (selesai/batal)
   List<Order> get historyOrders => _orders
       .where((order) =>
           order.status == OrderStatus.selesai ||
           order.status == OrderStatus.dibatalkan)
       .toList();
 
-  // MENDENGARKAN DATA REAL-TIME DARI FIREBASE
   void listenToOrders() {
     _firestore
         .collection('orders')
@@ -37,30 +34,10 @@ class OrderProvider extends ChangeNotifier {
     });
   }
 
-  // FUNGSI TEST: Nambah order dummy
-  Future<void> addDummyOrder() async {
-    final newOrder = Order(
-      id: '',
-      tenant: 'Warung Bu Indah (Test Firebase)',
-      items: [
-        OrderItem(name: 'Ayam Bakar', quantity: 1, pricePerItem: 15000),
-        OrderItem(name: 'Es Teh', quantity: 1, pricePerItem: 3000),
-      ],
-      totalPrice: 18000,
-      status: OrderStatus.menunggu,
-      createdAt: DateTime.now(),
-    );
-
-    await _firestore.collection('orders').add(newOrder.toMap());
-  }
-
-  // --- FUNGSI CHECKOUT MULTI-TENANT (SPLIT ORDER) ---
   Future<void> createOrderFromCart(
       List<CartItem> cartItems, int totalAmount) async {
     if (cartItems.isEmpty) return;
 
-    // 1. Kelompokkan item berdasarkan Nama Toko (Tenant)
-    // Map<NamaToko, List<ItemBelanja>>
     final Map<String, List<CartItem>> itemsByTenant = {};
 
     for (var item in cartItems) {
@@ -70,39 +47,34 @@ class OrderProvider extends ChangeNotifier {
       itemsByTenant[item.tenant]!.add(item);
     }
 
-    // 2. Buat Order terpisah untuk setiap Toko
-    // Kita gunakan Future.wait agar semua upload berjalan paralel (cepat)
     final List<Future> uploadTasks = [];
 
     itemsByTenant.forEach((tenantName, items) {
-      // Hitung total harga KHUSUS untuk toko ini saja
       int tenantTotal =
           items.fold(0, (sum, item) => sum + (item.price * item.quantity));
 
-      // Konversi ke OrderItem database
+      // UPDATE DI SINI: Mapping CartItem ke OrderItem
       final List<OrderItem> orderItems = items.map((ci) {
         return OrderItem(
-          name: ci.notes.isEmpty ? ci.menuName : "${ci.menuName} (${ci.notes})",
+          name: ci.menuName, // Nama Bersih (tanpa catatan)
           quantity: ci.quantity,
           pricePerItem: ci.price,
+          note: ci.notes, // Catatan masuk ke field khusus
         );
       }).toList();
 
-      // Buat Object Order
       final newOrder = Order(
         id: '',
-        tenant: tenantName, // Nama toko sudah sesuai grouping
+        tenant: tenantName,
         items: orderItems,
-        totalPrice: tenantTotal, // Total harga per toko
+        totalPrice: tenantTotal,
         status: OrderStatus.menunggu,
         createdAt: DateTime.now(),
       );
 
-      // Masukkan antrian upload ke Firebase
       uploadTasks.add(_firestore.collection('orders').add(newOrder.toMap()));
     });
 
-    // 3. Eksekusi semua upload
     await Future.wait(uploadTasks);
   }
 
@@ -111,7 +83,6 @@ class OrderProvider extends ChangeNotifier {
       await _firestore.collection('orders').doc(orderId).update({
         'status': newStatus.name,
       });
-      // Tidak perlu notifyListeners() manual karena listener stream akan otomatis mendeteksi perubahan
     } catch (e) {
       print("Error updating status: $e");
       rethrow;

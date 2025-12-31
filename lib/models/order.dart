@@ -6,8 +6,14 @@ class OrderItem {
   final String name;
   final int quantity;
   final int pricePerItem;
+  final String note; // TAMBAHAN: Field Note
 
-  OrderItem({required this.name, required this.quantity, required this.pricePerItem});
+  OrderItem({
+    required this.name, 
+    required this.quantity, 
+    required this.pricePerItem,
+    this.note = '', // Default kosong
+  });
 
   // Data dari Firebase -> ke App
   factory OrderItem.fromMap(Map<String, dynamic> map) {
@@ -15,6 +21,7 @@ class OrderItem {
       name: map['name'] ?? '',
       quantity: map['quantity'] ?? 1,
       pricePerItem: map['pricePerItem'] ?? 0,
+      note: map['note'] ?? '', // Ambil note dari Firebase
     );
   }
 
@@ -24,6 +31,7 @@ class OrderItem {
       'name': name,
       'quantity': quantity,
       'pricePerItem': pricePerItem,
+      'note': note, // Simpan note ke Firebase
     };
   }
 }
@@ -45,14 +53,13 @@ class Order {
     required this.createdAt,
   });
 
-  // Helper untuk menampilkan ringkasan menu
+  // Helper untuk ringkasan (opsional)
   String get menuSummary {
     return items.map((e) => "${e.name} x${e.quantity}").join(", ");
   }
 
   // --- LOGIKA FIREBASE ---
 
-  // Membaca data dari Firebase
   factory Order.fromFirestore(DocumentSnapshot doc) {
     Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
     return Order(
@@ -64,7 +71,6 @@ class Order {
         orElse: () => OrderStatus.menunggu,
       ),
       createdAt: (data['createdAt'] as Timestamp).toDate(),
-      // Casting eksplisit agar tidak error List<dynamic>
       items: (data['items'] as List<dynamic>?)
               ?.map((item) => OrderItem.fromMap(item as Map<String, dynamic>))
               .toList() ??
@@ -72,7 +78,6 @@ class Order {
     );
   }
 
-  // Mengirim data ke Firebase
   Map<String, dynamic> toMap() {
     return {
       'tenant': tenant,

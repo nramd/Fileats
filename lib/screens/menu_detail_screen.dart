@@ -3,38 +3,61 @@ import 'package:provider/provider.dart';
 import '../providers/cart_provider.dart';
 
 class MenuDetailScreen extends StatefulWidget {
-  // Kita menerima data menu lewat Constructor
   final Map<String, dynamic> menu;
+  
+  // TAMBAHAN: Parameter Opsional untuk Mode Edit
+  final String? cartItemId; 
+  final String? initialNote;
 
-  const MenuDetailScreen({Key? key, required this.menu}) : super(key: key);
+  const MenuDetailScreen({
+    Key? key, 
+    required this.menu,
+    this.cartItemId, // Jika diisi, berarti Mode Edit
+    this.initialNote,
+  }) : super(key: key);
 
   @override
   State<MenuDetailScreen> createState() => _MenuDetailScreenState();
 }
 
 class _MenuDetailScreenState extends State<MenuDetailScreen> {
-  final TextEditingController _noteController = TextEditingController();
+  late TextEditingController _noteController;
+
+  @override
+  void initState() {
+    super.initState();
+    // Isi catatan jika ada (Mode Edit)
+    _noteController = TextEditingController(text: widget.initialNote ?? '');
+  }
+
+  @override
+  void dispose() {
+    _noteController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     final menu = widget.menu;
+    // Cek apakah ini Mode Edit
+    final isEditMode = widget.cartItemId != null;
 
     return Scaffold(
-      // AppBar Transparan agar gambar terlihat full di atas (Opsional, tapi biar estetik kita pakai standar saja dulu)
       appBar: AppBar(
-        title: Text(menu['name'], style: TextStyle(fontFamily: "Gabarito", fontWeight: FontWeight.bold, color: Colors.black)),
+        title: Text(isEditMode ? "Edit Pesanan" : menu['name'], 
+            style: TextStyle(fontFamily: "Gabarito", fontWeight: FontWeight.bold, color: Colors.black)),
         backgroundColor: Colors.white,
         elevation: 0,
         iconTheme: IconThemeData(color: Colors.black),
       ),
       body: Column(
         children: [
-          // 1. GAMBAR MAKANAN BESAR
           Expanded(
             child: SingleChildScrollView(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  // GAMBAR
                   Container(
                     width: double.infinity,
                     height: 250,
@@ -52,7 +75,6 @@ class _MenuDetailScreenState extends State<MenuDetailScreen> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        // Nama Toko
                         Row(
                           children: [
                             Icon(Icons.store, size: 16, color: Colors.grey),
@@ -62,28 +84,18 @@ class _MenuDetailScreenState extends State<MenuDetailScreen> {
                         ),
                         SizedBox(height: 10),
                         
-                        // Nama Makanan & Harga
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Expanded(
-                              child: Text(
-                                menu['name'],
-                                style: TextStyle(fontFamily: "Gabarito", fontSize: 24, fontWeight: FontWeight.bold),
-                              ),
-                            ),
-                            Text(
-                              "Rp ${menu['price']}",
-                              style: TextStyle(fontFamily: "Gabarito", fontSize: 24, fontWeight: FontWeight.bold, color: Color(0xffED831F)),
-                            ),
+                            Expanded(child: Text(menu['name'], style: TextStyle(fontFamily: "Gabarito", fontSize: 24, fontWeight: FontWeight.bold))),
+                            Text("Rp ${menu['price']}", style: TextStyle(fontFamily: "Gabarito", fontSize: 24, fontWeight: FontWeight.bold, color: Color(0xffED831F))),
                           ],
                         ),
                         SizedBox(height: 20),
                         Divider(),
                         SizedBox(height: 10),
 
-                        // Input Catatan
-                        Text("Catatan Pesanan (Opsional)", style: TextStyle(fontWeight: FontWeight.bold)),
+                        Text("Catatan Pesanan", style: TextStyle(fontWeight: FontWeight.bold)),
                         SizedBox(height: 10),
                         TextField(
                           controller: _noteController,
@@ -103,7 +115,7 @@ class _MenuDetailScreenState extends State<MenuDetailScreen> {
             ),
           ),
 
-          // 2. TOMBOL TAMBAH DI BAWAH
+          // TOMBOL AKSI
           Container(
             padding: EdgeInsets.all(20),
             decoration: BoxDecoration(
@@ -115,28 +127,36 @@ class _MenuDetailScreenState extends State<MenuDetailScreen> {
               height: 50,
               child: ElevatedButton(
                 onPressed: () {
-                  // LOGIC TAMBAH KE KERANJANG DENGAN CATATAN
-                  Provider.of<CartProvider>(context, listen: false).addItem(
-                    menu['name'], // ID
-                    menu['name'], // Title
-                    menu['price'], // Price
-                    menu['tenant'], // Tenant
-                    _noteController.text, // NOTE (Catatan dari input)
-                  );
-
-                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                    content: Text("Berhasil ditambahkan ke keranjang!"),
-                    duration: Duration(seconds: 1),
-                    backgroundColor: Colors.green,
-                  ));
+                  if (isEditMode) {
+                    // LOGIC UPDATE (EDIT MODE)
+                    Provider.of<CartProvider>(context, listen: false).updateNote(
+                      widget.cartItemId!,
+                      _noteController.text,
+                    );
+                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Catatan diperbarui!")));
+                  } else {
+                    // LOGIC ADD (NORMAL MODE)
+                    Provider.of<CartProvider>(context, listen: false).addItem(
+                      menu['name'], 
+                      menu['name'], 
+                      menu['price'], 
+                      menu['tenant'],
+                      menu['image'], // Kirim Image
+                      _noteController.text,
+                    );
+                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Masuk keranjang!"), backgroundColor: Colors.green));
+                  }
                   
-                  Navigator.pop(context); // Kembali ke Home
+                  Navigator.pop(context);
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Color(0xffED831F),
                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
                 ),
-                child: Text("Tambah ke Keranjang", style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white)),
+                child: Text(
+                  isEditMode ? "Simpan Perubahan" : "Tambah ke Keranjang", 
+                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white)
+                ),
               ),
             ),
           ),

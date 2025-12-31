@@ -449,6 +449,7 @@ class _HomeScreenBodyState extends State<HomeScreenBody> {
                     menu['name'],
                     menu['price'],
                     menu['tenant'],
+                    menu['image'],
                   );
                   ScaffoldMessenger.of(context).hideCurrentSnackBar();
                   ScaffoldMessenger.of(context).showSnackBar(SnackBar(

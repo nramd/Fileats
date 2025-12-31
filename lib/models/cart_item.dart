@@ -1,12 +1,11 @@
-import 'package:flutter/foundation.dart';
-
 class CartItem {
   final String id;
   final String menuName;
   final int quantity;
   final int price;
   final String tenant;
-  final String notes; 
+  final String notes;
+  final String image; 
 
   CartItem({
     required this.id,
@@ -14,6 +13,7 @@ class CartItem {
     required this.quantity,
     required this.price,
     required this.tenant,
-    this.notes = '', 
+    this.notes = '',
+    required this.image, 
   });
 }
