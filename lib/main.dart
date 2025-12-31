@@ -5,13 +5,28 @@ import 'package:fileats/screens/login_screen.dart';
 import 'package:fileats/screens/signup_screen.dart';
 import 'package:provider/provider.dart';
 import 'providers/feed_provider.dart';
+import 'providers/cart_provider.dart';
+import 'package:fileats/screens/cart_screen.dart';
+import 'providers/auth_provider.dart';
 
-void main() {
+// TAMBAHAN: Import Firebase Auth untuk cek user
+import 'package:firebase_auth/firebase_auth.dart' hide AuthProvider;
+import 'package:firebase_core/firebase_core.dart';
+import 'firebase_options.dart';
+
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+
   runApp(
     MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => FeedProvider()),
-        ChangeNotifierProvider(create: (_) => OrderProvider()), // ADD HERE
+        ChangeNotifierProvider(create: (_) => OrderProvider()),
+        ChangeNotifierProvider(create: (_) => CartProvider()),
+        ChangeNotifierProvider(create: (_) => AuthProvider()),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
@@ -22,16 +37,49 @@ void main() {
           SignupScreen.routeName: (context) => SignupScreen(),
           HomeScreen.routeName: (context) => HomeScreen(),
           FileatSplashh.routeName: (context) => FileatSplashh(),
+          CartScreen.routeName: (context) => CartScreen(),
         },
       ),
     ),
   );
 }
 
-class FileatSplashh extends StatelessWidget {
+// UBAH KE STATEFUL WIDGET AGAR BISA CEK LOGIN
+class FileatSplashh extends StatefulWidget {
   static const routeName = '/splash';
+
+  @override
+  State<FileatSplashh> createState() => _FileatSplashhState();
+}
+
+class _FileatSplashhState extends State<FileatSplashh> {
+  
+  @override
+  void initState() {
+    super.initState();
+    _checkAutoLogin();
+  }
+
+  // --- LOGIKA AUTO LOGIN ---
+  void _checkAutoLogin() async {
+    // 1. Tunggu 1 detik agar splash screen terlihat sebentar (Smooth effect)
+    await Future.delayed(Duration(seconds: 1));
+
+    // 2. Cek apakah ada user (Pembeli) yang nyangkut di Firebase
+    User? user = FirebaseAuth.instance.currentUser;
+
+    if (user != null) {
+      // JIKA SUDAH LOGIN: Langsung pindah ke Home Screen
+      if (mounted) {
+        Navigator.pushReplacementNamed(context, HomeScreen.routeName);
+      }
+    }
+    // JIKA BELUM LOGIN: Diam saja, biarkan user melihat tombol pilihan Penjual/Pembeli
+  }
+
   @override
   Widget build(BuildContext context) {
+    // DESAIN DI BAWAH INI SAMA PERSIS DENGAN KODE ASLI ANDA
     return Scaffold(
       body: Container(
         color: Colors.white,

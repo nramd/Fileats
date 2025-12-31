@@ -1,10 +1,73 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import '../providers/auth_provider.dart';
 
-class SignupScreen extends StatelessWidget {
+// UBAH KE STATEFULWIDGET AGAR BISA ADA FUNGSINYA
+class SignupScreen extends StatefulWidget {
   static const routeName = '/sign-page-fileat';
+
+  @override
+  State<SignupScreen> createState() => _SignupScreenState();
+}
+
+class _SignupScreenState extends State<SignupScreen> {
+  // 1. Controller untuk menangkap teks input
+  final TextEditingController _firstNameController = TextEditingController();
+  final TextEditingController _lastNameController = TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+
+  bool _isLoading = false; // Status loading
+
+  @override
+  void dispose() {
+    _firstNameController.dispose();
+    _lastNameController.dispose();
+    _emailController.dispose();
+    _passwordController.dispose();
+    super.dispose();
+  }
+
+  // 2. Fungsi Logika Daftar
+  void _handleSignUp() async {
+    // Ambil text dari controller
+    final email = _emailController.text.trim();
+    final password = _passwordController.text.trim();
+    final firstName = _firstNameController.text.trim();
+
+    // Validasi sederhana
+    if (email.isEmpty || password.isEmpty || firstName.isEmpty) {
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text("Mohon lengkapi semua data!")));
+      return;
+    }
+
+    setState(() => _isLoading = true);
+
+    try {
+      // Panggil Provider untuk daftar ke Firebase
+      await Provider.of<AuthProvider>(context, listen: false)
+          .signUpBuyer(email, password);
+
+      // Jika berhasil
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text("Akun berhasil dibuat! Silakan Login.")));
+      Navigator.pop(context); // Kembali ke login
+    } catch (e) {
+      // Jika gagal
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text("Gagal: $e")));
+    } finally {
+      if (mounted) setState(() => _isLoading = false);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
+    // DESAIN DI BAWAH INI SAMA PERSIS DENGAN KODE ANDA
+    // HANYA DITAMBAHKAN 'controller' DAN 'onPressed'
     return Scaffold(
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(150),
@@ -43,7 +106,7 @@ class SignupScreen extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Padding(
-                  padding: const EdgeInsets.only(top: 25, left: 15),
+                  padding: const EdgeInsets.only(top: 25, left: 15, bottom: 10),
                   child: Text(
                     "Buat Akun",
                     style: TextStyle(
@@ -69,6 +132,7 @@ class SignupScreen extends StatelessWidget {
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 20),
                   child: TextField(
+                    controller: _firstNameController, // <-- Fungsi: Controller
                     decoration: InputDecoration(
                       prefixIcon: Icon(Icons.person),
                       labelText: "Nama Awal",
@@ -82,6 +146,7 @@ class SignupScreen extends StatelessWidget {
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 20),
                   child: TextField(
+                    controller: _lastNameController, // <-- Fungsi: Controller
                     decoration: InputDecoration(
                       prefixIcon: Icon(Icons.person),
                       labelText: "Nama Akhir",
@@ -95,6 +160,7 @@ class SignupScreen extends StatelessWidget {
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 20),
                   child: TextField(
+                    controller: _emailController, // <-- Fungsi: Controller
                     decoration: InputDecoration(
                       prefixIcon: Icon(Icons.email),
                       labelText: "Email",
@@ -108,6 +174,7 @@ class SignupScreen extends StatelessWidget {
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 20),
                   child: TextField(
+                    controller: _passwordController, // <-- Fungsi: Controller
                     obscureText: true,
                     decoration: InputDecoration(
                       prefixIcon: Icon(Icons.lock),
@@ -122,7 +189,9 @@ class SignupScreen extends StatelessWidget {
                 SizedBox(height: 50),
                 Center(
                   child: ElevatedButton(
-                    onPressed: () {},
+                    onPressed: _isLoading
+                        ? null
+                        : _handleSignUp, // <-- Fungsi: Panggil Logic
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Color(0xFF002647),
                       minimumSize: Size(343, 56),
@@ -130,10 +199,13 @@ class SignupScreen extends StatelessWidget {
                         borderRadius: BorderRadius.circular(10),
                       ),
                     ),
-                    child: Text(
-                      "Sign Up",
-                      style: TextStyle(fontSize: 18, color: Colors.white),
-                    ),
+                    child: _isLoading
+                        ? CircularProgressIndicator(
+                            color: Colors.white) // Loading kecil saat proses
+                        : Text(
+                            "Sign Up",
+                            style: TextStyle(fontSize: 18, color: Colors.white),
+                          ),
                   ),
                 ),
                 SizedBox(height: 10),
@@ -190,7 +262,9 @@ class SignupScreen extends StatelessWidget {
                       ],
                     ),
                   ),
-                )
+                ),
+                // Tambahan padding bawah sedikit agar aman di HP berponi
+                SizedBox(height: 20),
               ],
             ),
           ),

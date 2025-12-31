@@ -1,7 +1,11 @@
+import 'package:fileats/providers/cart_provider.dart';
 import 'package:fileats/screens/order_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:fileats/screens/community_screen.dart';
 import 'package:fileats/screens/profile_screen.dart';
+import 'package:provider/provider.dart';
+import 'cart_screen.dart';
+import 'menu_detail_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   static const routeName = '/fileat-homepage1';
@@ -28,6 +32,47 @@ class _HomeScreenState extends State<HomeScreen> {
               elevation: 0,
               iconTheme: IconThemeData(color: Colors.black),
               title: Image.asset("assets/images/assets/FILeats.png"),
+              actions: [
+                Consumer<CartProvider>(
+                  builder: (_, cart, ch) => Stack(
+                    children: [
+                      IconButton(
+                        icon:
+                            Icon(Icons.shopping_cart, color: Color(0xffEC831E)),
+                        onPressed: () {
+                          Navigator.of(context).pushNamed(CartScreen.routeName);
+                        },
+                      ),
+                      if (cart.itemCount > 0)
+                        Positioned(
+                          right: 8,
+                          top: 8,
+                          child: Container(
+                            padding: EdgeInsets.all(2),
+                            decoration: BoxDecoration(
+                              color: Colors.red,
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            constraints: BoxConstraints(
+                              minWidth: 16,
+                              minHeight: 16,
+                            ),
+                            child: Text(
+                              '${cart.itemCount}',
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                fontSize: 10,
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                        )
+                    ],
+                  ),
+                ),
+                SizedBox(width: 10),
+              ],
               bottom: PreferredSize(
                 preferredSize: Size.fromHeight(60.0),
                 child: Align(
@@ -125,7 +170,138 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 }
 
-class HomeScreenBody extends StatelessWidget {
+class HomeScreenBody extends StatefulWidget {
+  @override
+  State<HomeScreenBody> createState() => _HomeScreenBodyState();
+}
+
+class _HomeScreenBodyState extends State<HomeScreenBody> {
+  final List<Map<String, dynamic>> _allMenus = [
+    // --- LALAPAN MBAK ELLY (Spesialis Ayam & Usus) ---
+    {
+      'tenant': "Lalapan Mbak Elly",
+      'name': 'Nasi Ayam Bakar',
+      'price': 15000,
+      'category': 'Ayam',
+      'image': 'assets/images/menumakan_toko/n_a_Bakar.jpg'
+    },
+    {
+      'tenant': "Lalapan Mbak Elly",
+      'name': 'Nasi Ayam Crispy',
+      'price': 13000,
+      'category': 'Ayam',
+      'image': 'assets/images/menumakan_toko/n_a_Crispy.jpg'
+    },
+    {
+      'tenant': "Lalapan Mbak Elly",
+      'name': 'Nasi Ayam Ungkep',
+      'price': 13000,
+      'category': 'Ayam',
+      'image': 'assets/images/menumakan_toko/n_a_ungkep.jpg'
+    },
+    {
+      'tenant': "Lalapan Mbak Elly",
+      'name': 'Nasi Usus',
+      'price': 10000,
+      'category': 'Nasi',
+      'image': 'assets/images/menumakan_toko/n_usus.jpg'
+    },
+
+    // --- WARUNG BANGDOR (Spesialis Gorengan & Mie Ayam) ---
+    {
+      'tenant': "Warung Bangdor",
+      'name': 'Nasi Goreng',
+      'price': 12000,
+      'category': 'Nasi',
+      'image': 'assets/images/menumakan_toko/n_goreng.jpg'
+    },
+    {
+      'tenant': "Warung Bangdor",
+      'name': 'Nasi Gila',
+      'price': 14000,
+      'category': 'Nasi',
+      'image': 'assets/images/menumakan_toko/n_gila.jpg'
+    },
+    {
+      'tenant': "Warung Bangdor",
+      'name': 'Nasi Kulit Ayam',
+      'price': 15000,
+      'category': 'Ayam',
+      'image': 'assets/images/menumakan_toko/n_KulitAyam.jpg'
+    },
+    {
+      'tenant': "Warung Bangdor",
+      'name': 'Mie Ayam',
+      'price': 12000,
+      'category': 'Mie',
+      'image': 'assets/images/menumakan_toko/mie_ayam.jpg'
+    },
+
+    // --- WARUNG BU INDAH (Aneka Nasi & Indomie) ---
+    {
+      'tenant': "Warung Bu Indah",
+      'name': 'Nasi Kuning',
+      'price': 10000,
+      'category': 'Nasi',
+      'image': 'assets/images/menumakan_toko/n_kuning.jpg'
+    },
+    {
+      'tenant': "Warung Bu Indah",
+      'name': 'Nasi Padang',
+      'price': 18000,
+      'category': 'Nasi',
+      'image': 'assets/images/menumakan_toko/n_padang.jpg'
+    },
+    {
+      'tenant': "Warung Bu Indah",
+      'name': 'Indomie Goreng',
+      'price': 7000,
+      'category': 'Mie',
+      'image': 'assets/images/menumakan_toko/indomie_g.jpg'
+    },
+    {
+      'tenant': "Warung Bu Indah",
+      'name': 'Indomie Kuah',
+      'price': 7000,
+      'category': 'Mie',
+      'image': 'assets/images/menumakan_toko/indomie_k.jpg'
+    },
+  ];
+
+  // Variabel untuk Search & Filter
+  String _searchQuery = "";
+  String _selectedCategory = "Semua";
+  List<Map<String, dynamic>> _filteredMenus = [];
+
+  @override
+  void initState() {
+    super.initState();
+    _filteredMenus = _allMenus; // Awalnya tampilkan semua
+  }
+
+  // LOGIC FILTERING
+  void _runFilter() {
+    setState(() {
+      _filteredMenus = _allMenus.where((menu) {
+        // Filter Text Search
+        final nameMatch = menu['name']
+            .toString()
+            .toLowerCase()
+            .contains(_searchQuery.toLowerCase());
+        final tenantMatch = menu['tenant']
+            .toString()
+            .toLowerCase()
+            .contains(_searchQuery.toLowerCase());
+
+        // Filter Category
+        final categoryMatch = _selectedCategory == "Semua" ||
+            menu['category'] == _selectedCategory;
+
+        return (nameMatch || tenantMatch) && categoryMatch;
+      }).toList();
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -134,141 +310,54 @@ class HomeScreenBody extends StatelessWidget {
         padding: const EdgeInsets.all(16.0),
         child: Column(
           children: [
-            // Search Bar
-            Container(
-              decoration: BoxDecoration(
-                color: Color(0xffD2D2D2),
-                borderRadius: BorderRadius.circular(20),
-              ),
-              child: Row(
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                    child: Icon(
-                      Icons.search,
-                      color: Colors.grey,
-                    ),
-                  ),
-                  Expanded(
-                    child: TextField(
-                      decoration: InputDecoration(
-                        hintText: "Cari disini...",
-                        hintStyle: TextStyle(fontFamily: "Gabarito"),
-                        border: InputBorder.none,
-                      ),
-                    ),
-                  ),
-                ],
+            // --- SEARCH BAR (SUDAH AKTIF) ---
+            TextField(
+              onChanged: (value) {
+                _searchQuery = value;
+                _runFilter(); // Jalankan filter tiap ketik
+              },
+              decoration: InputDecoration(
+                hintText: "Mau makan apa hari ini?",
+                prefixIcon: Icon(Icons.search),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(30.0),
+                  borderSide: BorderSide.none,
+                ),
+                filled: true,
+                fillColor: Colors.grey[200],
               ),
             ),
-            const SizedBox(height: 16.0),
-            // Category Chips (Minuman, Nasi, dll.)
+            SizedBox(height: 16.0),
+
+            // --- CATEGORY CHIPS (SUDAH AKTIF) ---
             SingleChildScrollView(
               scrollDirection: Axis.horizontal,
               child: Row(
-                mainAxisSize: MainAxisSize.min,
                 children: [
-                  _buildCategoryCard("Minuman",
-                      "assets/images/homepage_menumakan/fileat_minuman.png"),
-                  _buildCategoryCard("Nasi",
-                      "assets/images/homepage_menumakan/fileat_nasi.png"),
-                  _buildCategoryCard(
-                      "Mie", "assets/images/homepage_menumakan/fileat_mie.png"),
-                  _buildCategoryCard(
-                      "Kue", "assets/images/homepage_menumakan/fileat_kue.png"),
-                  _buildCategoryCard("Snack",
-                      "assets/images/homepage_menumakan/fileat_snack.png"),
+                  _buildCategoryChip("Semua"),
+                  _buildCategoryChip("Nasi"),
+                  _buildCategoryChip("Ayam"),
+                  _buildCategoryChip("Mie"),
+                  _buildCategoryChip("Minuman"),
                 ],
               ),
             ),
-            const SizedBox(height: 16.0),
-            // Daftar restoran atau menu
+            SizedBox(height: 16.0),
+
+            // --- HASIL PENCARIAN ---
             Expanded(
-              child: ListView(
-                // Scroll ke bawah untuk menampilkan toko
-                children: [
-                  _buildRestaurantTile(
-                    "Lalapan Mbak Elly",
-                    [
-                      {
-                        'name': 'Nasi Usus',
-                        'price': 12000,
-                        'image': 'assets/images/menumakan_toko/n_usus.jpg'
+              child: _filteredMenus.isEmpty
+                  ? Center(
+                      child: Text("Menu tidak ditemukan",
+                          style: TextStyle(color: Colors.grey)))
+                  : ListView.builder(
+                      itemCount: _filteredMenus.length,
+                      itemBuilder: (context, index) {
+                        final menu = _filteredMenus[index];
+                        // Tampilkan per Item
+                        return _buildSingleMenuRow(menu);
                       },
-                      {
-                        'name': 'Nasi Ayam Crispy',
-                        'price': 13000,
-                        'image': 'assets/images/menumakan_toko/n_a_Crispy.jpg'
-                      },
-                      {
-                        'name': 'Nasi Ayam Ungkep',
-                        'price': 13000,
-                        'image': 'assets/images/menumakan_toko/n_a_ungkep.jpg'
-                      },
-                      {
-                        'name': 'Nasi Ayam Bakar',
-                        'price': 15000,
-                        'image': 'assets/images/menumakan_toko/n_a_Bakar.jpg'
-                      },
-                      {
-                        'name': 'Nasi Ayam Kulit',
-                        'price': 11000,
-                        'image': 'assets/images/menumakan_toko/n_KulitAyam.jpg'
-                      },
-                    ],
-                  ),
-                  _buildRestaurantTile(
-                    "Warung Bangdor",
-                    [
-                      {
-                        'name': 'Nasi Goreng',
-                        'price': 12000,
-                        'image': 'assets/images/menumakan_toko/n_goreng.jpg'
-                      },
-                      {
-                        'name': 'Nasi Gila',
-                        'price': 13000,
-                        'image': 'assets/images/menumakan_toko/n_gila.jpg'
-                      },
-                      {
-                        'name': 'Mie Ayam',
-                        'price': 15000,
-                        'image': 'assets/images/menumakan_toko/mie_ayam.jpg'
-                      },
-                      {
-                        'name': 'Nasi Kuning',
-                        'price': 11000,
-                        'image': 'assets/images/menumakan_toko/n_kuning.jpg'
-                      },
-                      {
-                        'name': 'Nasi Padang',
-                        'price': 14000,
-                        'image': 'assets/images/menumakan_toko/n_padang.jpg'
-                      },
-                    ],
-                  ),
-                  _buildRestaurantTile(
-                    "Warung Bu Indah", // Khusus menjual mie
-                    [
-                      {
-                        'name': 'Indomie Goreng',
-                        'price': 7000,
-                        'image': 'assets/images/menumakan_toko/indomie_g.jpg'
-                      },
-                      {
-                        'name': 'Indomie Kuah',
-                        'price': 7000,
-                        'image': 'assets/images/menumakan_toko/indomie_k.jpg'
-                      },
-                      {
-                        'name': 'Indomie Double',
-                        'price': 12000,
-                        'image': 'assets/images/menumakan_toko/indomie_g.jpg'
-                      },
-                    ],
-                  ),
-                ],
-              ),
+                    ),
             ),
           ],
         ),
@@ -276,132 +365,107 @@ class HomeScreenBody extends StatelessWidget {
     );
   }
 
-  Widget _buildCategoryCard(String label, String imagePath) {
+  // Widget Tombol Kategori
+  Widget _buildCategoryChip(String label) {
+    final isSelected = _selectedCategory == label;
     return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: Material(
-        child: InkWell(
-          onTap: () {
-            // Aksi ketika kategori dipilih
-          },
-          child: Container(
-            width: 90, // Lebar card
-            height: 90, // Tinggi card termasuk teks
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(10.0),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.grey.withOpacity(0.4),
-                  spreadRadius: 3,
-                  blurRadius: 5,
-                  offset: Offset(0, 0),
-                ),
-              ],
-            ),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Image.asset(
-                  imagePath,
-                  width: 50, // Ukuran gambar
-                  height: 50,
-                  fit: BoxFit.contain,
-                  alignment: Alignment.center,
-                ),
-                Text(
-                  label,
-                  style: TextStyle(
-                    fontSize: 12.0,
-                    fontFamily: "Gabarito",
-                    fontWeight: FontWeight.bold,
-                    color: Colors.black,
-                  ),
-                  textAlign: TextAlign.center,
-                ),
-              ],
-            ),
-          ),
-        ),
+      padding: const EdgeInsets.only(right: 8.0),
+      child: ChoiceChip(
+        label: Text(label),
+        selected: isSelected,
+        selectedColor: Color(0xffED831F),
+        labelStyle: TextStyle(color: isSelected ? Colors.white : Colors.black),
+        onSelected: (bool selected) {
+          setState(() {
+            _selectedCategory = label;
+            _runFilter();
+          });
+        },
       ),
     );
   }
 
-  Widget _buildRestaurantTile(String name, List<Map<String, dynamic>> menus) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            name,
-            style: TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 20.0,
-                fontFamily: "Gabarito"),
-          ),
-          // SingleChildScrollView untuk scroll horizontal pada menu restoran
-          SingleChildScrollView(
-            scrollDirection: Axis.horizontal, // Scroll ke kanan untuk menu
-            child: Row(
-              children: menus.map((menu) {
-                return Padding(
-                  padding: const EdgeInsets.only(right: 8.0),
-                  child: _buildMenuTile(
-                      menu['name'], menu['price'], menu['image']),
-                );
-              }).toList(),
+  // Widget Tampilan Menu (Updated dengan Navigasi Detail)
+  Widget _buildSingleMenuRow(Map<String, dynamic> menu) {
+    return Card(
+      margin: EdgeInsets.only(bottom: 12),
+      elevation: 2,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+      child: InkWell(
+        // 1. BUNGKUS DENGAN INKWELL AGAR BISA DIKLIK
+        borderRadius: BorderRadius.circular(15),
+        onTap: () {
+          // 2. NAVIGASI KE HALAMAN DETAIL SAAT DIKLIK
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => MenuDetailScreen(menu: menu),
             ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildMenuTile(String menu, int price, String imagePath) {
-    return SizedBox(
-      width: 160,
-      height: 100,
-      child: Stack(
-        children: [
-          Positioned.fill(
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(20),
-              child: Image.asset(
-                imagePath,
-                fit: BoxFit.cover,
+          );
+        },
+        child: Padding(
+          padding: const EdgeInsets.all(12.0),
+          child: Row(
+            children: [
+              // Gambar Menu
+              ClipRRect(
+                borderRadius: BorderRadius.circular(10),
+                child: Image.asset(
+                  menu['image'],
+                  width: 80,
+                  height: 80,
+                  fit: BoxFit.cover,
+                  errorBuilder: (ctx, err, stack) =>
+                      Container(width: 80, height: 80, color: Colors.grey),
+                ),
               ),
-            ),
-          ),
-          Positioned(
-            bottom: 0,
-            left: 0,
-            right: 0,
-            child: ClipRRect(
-              borderRadius: BorderRadius.only(
-                bottomLeft: Radius.circular(20.0),
-                bottomRight: Radius.circular(20.0),
-              ),
-              child: Container(
-                color: Colors.black.withOpacity(0.5),
-                padding: const EdgeInsets.all(8.0),
+              SizedBox(width: 15),
+              // Info Menu
+              Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      menu,
-                      style: TextStyle(color: Colors.white, fontSize: 11.0),
-                    ),
-                    Text(
-                      "Rp. $price",
-                      style: TextStyle(color: Colors.white, fontSize: 10.0),
-                    ),
+                    Text(menu['name'],
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 16,
+                            fontFamily: "Gabarito")),
+                    Text(menu['tenant'],
+                        style: TextStyle(color: Colors.grey, fontSize: 12)),
+                    SizedBox(height: 5),
+                    Text("Rp ${menu['price']}",
+                        style: TextStyle(
+                            color: Color(0xffED831F),
+                            fontWeight: FontWeight.bold)),
                   ],
                 ),
               ),
-            ),
-          )
-        ],
+              // Tombol Tambah Cepat (Quick Add)
+              InkWell(
+                onTap: () {
+                  // Add to cart tanpa catatan (Quick Add)
+                  Provider.of<CartProvider>(context, listen: false).addItem(
+                    menu['name'],
+                    menu['name'],
+                    menu['price'],
+                    menu['tenant'],
+                  );
+                  ScaffoldMessenger.of(context).hideCurrentSnackBar();
+                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                    content: Text('${menu['name']} ditambahkan!'),
+                    duration: Duration(milliseconds: 800),
+                  ));
+                },
+                child: Container(
+                  padding: EdgeInsets.all(8),
+                  decoration: BoxDecoration(
+                      color: Color(0xffED831F), shape: BoxShape.circle),
+                  child: Icon(Icons.add, color: Colors.white, size: 20),
+                ),
+              )
+            ],
+          ),
+        ),
       ),
     );
   }

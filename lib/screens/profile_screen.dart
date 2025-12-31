@@ -1,19 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:fileats/main.dart';
-
-void main() {
-  runApp(MyApp());
-}
-
-class MyApp extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: ProfileScreen(),
-    );
-  }
-}
+// PERBAIKAN DI SINI: Tambahkan 'hide AuthProvider'
+import 'package:firebase_auth/firebase_auth.dart' hide AuthProvider; 
+import 'package:provider/provider.dart';
+import '../providers/auth_provider.dart'; 
+import '../main.dart'; 
 
 class ProfileScreen extends StatefulWidget {
   @override
@@ -23,69 +13,71 @@ class ProfileScreen extends StatefulWidget {
 class _ProfileScreenState extends State<ProfileScreen> {
   @override
   Widget build(BuildContext context) {
+    // 1. Ambil data User yang sedang login
+    final User? user = FirebaseAuth.instance.currentUser;
+    // Ambil nama dari email (sebelum @) sebagai placeholder nama
+    final String displayName = user?.email?.split('@')[0] ?? "Pengguna";
+
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
         toolbarHeight: 110,
         backgroundColor: Colors.white,
+        elevation: 0,
         title: Padding(
-          padding: const EdgeInsets.only(left: 8, top: 40),
+          padding: const EdgeInsets.only(left: 8, top: 20),
           child: Row(
             children: [
               CircleAvatar(
                 backgroundColor: Colors.transparent,
+                radius: 26,
                 child: Icon(Icons.account_circle_outlined,
                     size: 52, color: Colors.black),
               ),
-              SizedBox(
-                width: 20,
-              ),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    'User2137123',
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontFamily: "Gabarito",
-                      fontSize: 18,
-                      color: Colors.black,
+              SizedBox(width: 15),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      displayName, 
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontFamily: "Gabarito",
+                        fontSize: 18,
+                        color: Colors.black,
+                      ),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
                     ),
-                  ),
-                  SizedBox(
-                    height: 5,
-                  ),
-                  Text(
-                    'User2137123@gmail.com',
-                    style: TextStyle(
-                      fontWeight: FontWeight.normal,
-                      fontFamily: "Gabarito",
-                      fontSize: 14,
-                      color: Color(0xff757575),
+                    SizedBox(height: 5),
+                    Text(
+                      user?.email ?? "Email tidak tersedia", 
+                      style: TextStyle(
+                        fontWeight: FontWeight.normal,
+                        fontFamily: "Gabarito",
+                        fontSize: 14,
+                        color: Color(0xff757575),
+                      ),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
                     ),
-                  ),
-                  SizedBox(
-                    height: 5,
-                  ),
-                  Text(
-                    '+62 812 3456 7890',
-                    style: TextStyle(
-                      fontWeight: FontWeight.normal,
-                      fontFamily: "Gabarito",
-                      fontSize: 14,
-                      color: Color(0xff757575),
-                    ),
-                  )
-                ],
-              ),
-              SizedBox(
-                width: 115,
-              ),
-              InkWell(
-                child: Container(
-                  color: Colors.transparent,
-                  child: Image.asset("assets/images/assets/rightArrow.png"),
+                    SizedBox(height: 5),
+                    Text(
+                      '+62 8xx xxxx xxxx',
+                      style: TextStyle(
+                        fontWeight: FontWeight.normal,
+                        fontFamily: "Gabarito",
+                        fontSize: 14,
+                        color: Color(0xff757575),
+                      ),
+                    )
+                  ],
                 ),
+              ),
+              IconButton(
+                icon: Image.asset("assets/images/assets/rightArrow.png", width: 24),
+                onPressed: () {},
               ),
             ],
           ),
@@ -96,7 +88,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
         child: ListView(
           children: [
             ListTile(
-              contentPadding: EdgeInsets.only(left: 35, top: 30),
+              contentPadding: EdgeInsets.symmetric(horizontal: 35, vertical: 10),
               title: Text(
                 "Riwayat Pemesanan",
                 style: TextStyle(
@@ -104,16 +96,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     fontSize: 16,
                     fontWeight: FontWeight.normal),
               ),
-              leading: Icon(
-                Icons.history_toggle_off_rounded,
-                size: 36,
-              ),
-              onTap: () {
-                return;
-              },
+              leading: Icon(Icons.history_toggle_off_rounded, size: 30),
+              onTap: () {},
             ),
             ListTile(
-              contentPadding: EdgeInsets.only(left: 35, top: 20),
+              contentPadding: EdgeInsets.symmetric(horizontal: 35, vertical: 10),
               title: Text(
                 "Favorit",
                 style: TextStyle(
@@ -121,16 +108,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     fontSize: 16,
                     fontWeight: FontWeight.normal),
               ),
-              leading: Icon(
-                Icons.favorite,
-                size: 36,
-              ),
-              onTap: () {
-                return;
-              },
+              leading: Icon(Icons.favorite_border, size: 30),
+              onTap: () {},
             ),
             ListTile(
-              contentPadding: EdgeInsets.only(left: 35, top: 20),
+              contentPadding: EdgeInsets.symmetric(horizontal: 35, vertical: 10),
               title: Text(
                 "Bantuan",
                 style: TextStyle(
@@ -138,16 +120,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     fontSize: 16,
                     fontWeight: FontWeight.normal),
               ),
-              leading: Icon(
-                Icons.help,
-                size: 36,
-              ),
-              onTap: () {
-                return;
-              },
+              leading: Icon(Icons.help_outline, size: 30),
+              onTap: () {},
             ),
             ListTile(
-              contentPadding: EdgeInsets.only(left: 35, top: 20),
+              contentPadding: EdgeInsets.symmetric(horizontal: 35, vertical: 10),
               title: Text(
                 "Pengaturan",
                 style: TextStyle(
@@ -155,34 +132,36 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     fontSize: 16,
                     fontWeight: FontWeight.normal),
               ),
-              leading: Icon(
-                Icons.settings,
-                size: 36,
-              ),
-              onTap: () {
-                return;
-              },
+              leading: Icon(Icons.settings_outlined, size: 30),
+              onTap: () {},
             ),
+            
+            // --- TOMBOL LOGOUT ---
             ListTile(
-              contentPadding: EdgeInsets.only(left: 35, top: 20),
+              contentPadding: EdgeInsets.symmetric(horizontal: 35, vertical: 10),
               title: Text(
                 "Log Out",
                 style: TextStyle(
                     fontFamily: "Gabarito",
                     fontSize: 16,
-                    fontWeight: FontWeight.normal,
+                    fontWeight: FontWeight.bold,
                     color: Colors.red),
               ),
               leading: Icon(
                 Icons.logout,
                 color: Colors.red,
-                size: 36,
+                size: 30,
               ),
-              onTap: () {
-                Navigator.of(context).pushAndRemoveUntil(
-                  MaterialPageRoute(builder: (context) => FileatSplashh()),
-                  (route) => false,
-                );
+              onTap: () async {
+                // Panggil logout dari Provider Anda (bukan dari Firebase Auth langsung)
+                await Provider.of<AuthProvider>(context, listen: false).logout();
+
+                if (mounted) {
+                  Navigator.of(context).pushAndRemoveUntil(
+                    MaterialPageRoute(builder: (context) => FileatSplashh()),
+                    (route) => false,
+                  );
+                }
               },
             ),
           ],
