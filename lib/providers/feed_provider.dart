@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-class FeedModel extends ChangeNotifier {
+class FeedProvider extends ChangeNotifier {
   final List<Map<String, String>> _feed = [];
 
   List<Map<String, String>> get feed => _feed;

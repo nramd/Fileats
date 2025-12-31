@@ -10,17 +10,17 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: ProfilePage1(),
+      home: ProfileScreen(),
     );
   }
 }
 
-class ProfilePage1 extends StatefulWidget {
+class ProfileScreen extends StatefulWidget {
   @override
-  State<ProfilePage1> createState() => _ProfilePage1State();
+  State<ProfileScreen> createState() => _ProfileScreenState();
 }
 
-class _ProfilePage1State extends State<ProfilePage1> {
+class _ProfileScreenState extends State<ProfileScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -84,7 +84,7 @@ class _ProfilePage1State extends State<ProfilePage1> {
               InkWell(
                 child: Container(
                   color: Colors.transparent,
-                  child: Image.asset("images/assets/rightArrow.png"),
+                  child: Image.asset("assets/images/assets/rightArrow.png"),
                 ),
               ),
             ],

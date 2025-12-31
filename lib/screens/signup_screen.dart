@@ -1,7 +1,7 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
-class SignPageFileat extends StatelessWidget {
+class SignupScreen extends StatelessWidget {
   static const routeName = '/sign-page-fileat';
   @override
   Widget build(BuildContext context) {
@@ -10,7 +10,8 @@ class SignPageFileat extends StatelessWidget {
         preferredSize: Size.fromHeight(150),
         child: AppBar(
           leading: IconButton(
-            icon: Image.asset("images/assets/back_button.png", width: 30, height: 30),
+            icon: Image.asset("assets/images/assets/back_button.png",
+                width: 30, height: 30),
             onPressed: () {
               Navigator.pop(context);
             },
@@ -161,7 +162,7 @@ class SignPageFileat extends StatelessWidget {
                     SizedBox(width: 40),
                     IconButton(
                       onPressed: () {},
-                      icon: Image.asset("images/assets/Google_logo.png",
+                      icon: Image.asset("assets/images/assets/Google_logo.png",
                           width: 30, height: 30),
                     ),
                   ],

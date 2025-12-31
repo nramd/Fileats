@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "197505752892",
+    "project_id": "fileats-ca98b",
+    "storage_bucket": "fileats-ca98b.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:197505752892:android:f75da76ab62e9a8d1a4839",
+        "android_client_info": {
+          "package_name": "com.example.fileats"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD2dX4wep3b4gc503kfCyB0WNhw4LQkDhw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

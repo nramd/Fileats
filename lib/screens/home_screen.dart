@@ -1,21 +1,22 @@
+import 'package:fileats/screens/order_screen.dart';
 import 'package:flutter/material.dart';
-import 'package:fileats/pages/fileat_communitypage1.dart';
-import 'package:fileats/pages/fileat_profile1.dart';
+import 'package:fileats/screens/community_screen.dart';
+import 'package:fileats/screens/profile_screen.dart';
 
-class FileatHomePage1 extends StatefulWidget {
+class HomeScreen extends StatefulWidget {
   static const routeName = '/fileat-homepage1';
   @override
-  FileatHomePage1State createState() => FileatHomePage1State();
+  _HomeScreenState createState() => _HomeScreenState();
 }
 
-class FileatHomePage1State extends State<FileatHomePage1> {
+class _HomeScreenState extends State<HomeScreen> {
   int _currentIndex = 0;
 
   final List<Widget> _pages = [
-    FileatHomePage1Body(),
-    CommunityPage1(),
-    Center(child: Text("Orders Page")),
-    ProfilePage1(),
+    HomeScreenBody(),
+    CommunityScreen(),
+    OrdersScreen(),
+    ProfileScreen(),
   ];
 
   @override
@@ -26,7 +27,7 @@ class FileatHomePage1State extends State<FileatHomePage1> {
               backgroundColor: Colors.white,
               elevation: 0,
               iconTheme: IconThemeData(color: Colors.black),
-              title: Image.asset("images/assets/FILeats.png"),
+              title: Image.asset("assets/images/assets/FILeats.png"),
               bottom: PreferredSize(
                 preferredSize: Size.fromHeight(60.0),
                 child: Align(
@@ -69,8 +70,8 @@ class FileatHomePage1State extends State<FileatHomePage1> {
           BottomNavigationBarItem(
             icon: Image.asset(
               _currentIndex == 0
-                  ? "images/navbar/s_Home.png"
-                  : "images/navbar/Home.png",
+                  ? "assets/images/navbar/s_Home.png"
+                  : "assets/images/navbar/Home.png",
               width: 24,
               height: 24,
             ),
@@ -79,8 +80,8 @@ class FileatHomePage1State extends State<FileatHomePage1> {
           BottomNavigationBarItem(
             icon: Image.asset(
               _currentIndex == 1
-                  ? "images/navbar/s_Community.png"
-                  : "images/navbar/Community.png",
+                  ? "assets/images/navbar/s_Community.png"
+                  : "assets/images/navbar/Community.png",
               width: 24,
               height: 24,
             ),
@@ -89,8 +90,8 @@ class FileatHomePage1State extends State<FileatHomePage1> {
           BottomNavigationBarItem(
             icon: Image.asset(
               _currentIndex == 2
-                  ? "images/navbar/s_orders.png"
-                  : "images/navbar/orders.png",
+                  ? "assets/images/navbar/s_orders.png"
+                  : "assets/images/navbar/orders.png",
               width: 24,
               height: 24,
             ),
@@ -99,8 +100,8 @@ class FileatHomePage1State extends State<FileatHomePage1> {
           BottomNavigationBarItem(
             icon: Image.asset(
               _currentIndex == 3
-                  ? "images/navbar/s_Profile.png"
-                  : "images/navbar/Profile.png",
+                  ? "assets/images/navbar/s_Profile.png"
+                  : "assets/images/navbar/Profile.png",
               width: 24,
               height: 24,
             ),
@@ -124,7 +125,7 @@ class FileatHomePage1State extends State<FileatHomePage1> {
   }
 }
 
-class FileatHomePage1Body extends StatelessWidget {
+class HomeScreenBody extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -168,15 +169,15 @@ class FileatHomePage1Body extends StatelessWidget {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   _buildCategoryCard("Minuman",
-                      "images/homepage_menumakan/fileat_minuman.png"),
+                      "assets/images/homepage_menumakan/fileat_minuman.png"),
+                  _buildCategoryCard("Nasi",
+                      "assets/images/homepage_menumakan/fileat_nasi.png"),
                   _buildCategoryCard(
-                      "Nasi", "images/homepage_menumakan/fileat_nasi.png"),
+                      "Mie", "assets/images/homepage_menumakan/fileat_mie.png"),
                   _buildCategoryCard(
-                      "Mie", "images/homepage_menumakan/fileat_mie.png"),
-                  _buildCategoryCard(
-                      "Kue", "images/homepage_menumakan/fileat_kue.png"),
-                  _buildCategoryCard(
-                      "Snack", "images/homepage_menumakan/fileat_snack.png"),
+                      "Kue", "assets/images/homepage_menumakan/fileat_kue.png"),
+                  _buildCategoryCard("Snack",
+                      "assets/images/homepage_menumakan/fileat_snack.png"),
                 ],
               ),
             ),
@@ -192,27 +193,27 @@ class FileatHomePage1Body extends StatelessWidget {
                       {
                         'name': 'Nasi Usus',
                         'price': 12000,
-                        'image': 'images/menumakan_toko/n_usus.jpg'
+                        'image': 'assets/images/menumakan_toko/n_usus.jpg'
                       },
                       {
                         'name': 'Nasi Ayam Crispy',
                         'price': 13000,
-                        'image': 'images/menumakan_toko/n_a_Crispy.jpg'
+                        'image': 'assets/images/menumakan_toko/n_a_Crispy.jpg'
                       },
                       {
                         'name': 'Nasi Ayam Ungkep',
                         'price': 13000,
-                        'image': 'images/menumakan_toko/n_a_ungkep.jpg'
+                        'image': 'assets/images/menumakan_toko/n_a_ungkep.jpg'
                       },
                       {
                         'name': 'Nasi Ayam Bakar',
                         'price': 15000,
-                        'image': 'images/menumakan_toko/n_a_Bakar.jpg'
+                        'image': 'assets/images/menumakan_toko/n_a_Bakar.jpg'
                       },
                       {
                         'name': 'Nasi Ayam Kulit',
                         'price': 11000,
-                        'image': 'images/menumakan_toko/n_KulitAyam.jpg'
+                        'image': 'assets/images/menumakan_toko/n_KulitAyam.jpg'
                       },
                     ],
                   ),
@@ -222,27 +223,27 @@ class FileatHomePage1Body extends StatelessWidget {
                       {
                         'name': 'Nasi Goreng',
                         'price': 12000,
-                        'image': 'images/menumakan_toko/n_goreng.jpg'
+                        'image': 'assets/images/menumakan_toko/n_goreng.jpg'
                       },
                       {
                         'name': 'Nasi Gila',
                         'price': 13000,
-                        'image': 'images/menumakan_toko/n_gila.jpg'
+                        'image': 'assets/images/menumakan_toko/n_gila.jpg'
                       },
                       {
                         'name': 'Mie Ayam',
                         'price': 15000,
-                        'image': 'images/menumakan_toko/mie_ayam.jpg'
+                        'image': 'assets/images/menumakan_toko/mie_ayam.jpg'
                       },
                       {
                         'name': 'Nasi Kuning',
                         'price': 11000,
-                        'image': 'images/menumakan_toko/n_kuning.jpg'
+                        'image': 'assets/images/menumakan_toko/n_kuning.jpg'
                       },
                       {
                         'name': 'Nasi Padang',
                         'price': 14000,
-                        'image': 'images/menumakan_toko/n_padang.jpg'
+                        'image': 'assets/images/menumakan_toko/n_padang.jpg'
                       },
                     ],
                   ),
@@ -252,17 +253,17 @@ class FileatHomePage1Body extends StatelessWidget {
                       {
                         'name': 'Indomie Goreng',
                         'price': 7000,
-                        'image': 'images/menumakan_toko/indomie_g.jpg'
+                        'image': 'assets/images/menumakan_toko/indomie_g.jpg'
                       },
                       {
                         'name': 'Indomie Kuah',
                         'price': 7000,
-                        'image': 'images/menumakan_toko/indomie_k.jpg'
+                        'image': 'assets/images/menumakan_toko/indomie_k.jpg'
                       },
                       {
                         'name': 'Indomie Double',
                         'price': 12000,
-                        'image': 'images/menumakan_toko/indomie_g.jpg'
+                        'image': 'assets/images/menumakan_toko/indomie_g.jpg'
                       },
                     ],
                   ),

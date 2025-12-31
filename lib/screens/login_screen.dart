@@ -1,19 +1,19 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:fileats/pages/fileat_sign_up.dart';
-import 'package:fileats/pages/fileat_homepage1.dart';
+import 'package:fileats/screens/signup_screen.dart';
+import 'package:fileats/screens/home_screen.dart';
 
 // void main() {
 //   runApp(
 //     MaterialApp(
 //       debugShowCheckedModeBanner: false,
-//       home: LoginPagePembeli(),
+//       home: LoginScreenBuyer(),
 //     ),
 //   );
 // }
 
-class LoginPagePembeli extends StatelessWidget {
-  static const routeName = '/loginpagepembeli';
+class LoginScreenBuyer extends StatelessWidget {
+  static const routeName = '/LoginScreenBuyer';
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -21,7 +21,7 @@ class LoginPagePembeli extends StatelessWidget {
         preferredSize: Size.fromHeight(150),
         child: AppBar(
           leading: IconButton(
-            icon: Image.asset("images/assets/back_button.png",
+            icon: Image.asset("assets/images/assets/back_button.png",
                 width: 30, height: 30),
             onPressed: () {
               Navigator.pop(context);
@@ -121,8 +121,7 @@ class LoginPagePembeli extends StatelessWidget {
                     onPressed: () {
                       Navigator.pushAndRemoveUntil(
                         context,
-                        MaterialPageRoute(
-                            builder: (context) => FileatHomePage1()),
+                        MaterialPageRoute(builder: (context) => HomeScreen()),
                         (Route<dynamic> route) => false,
                       );
                     },
@@ -169,7 +168,7 @@ class LoginPagePembeli extends StatelessWidget {
                     ),
                     IconButton(
                       onPressed: () {},
-                      icon: Image.asset("images/assets/Google_logo.png",
+                      icon: Image.asset("assets/images/assets/Google_logo.png",
                           width: 30, height: 30),
                     ),
                   ],
@@ -193,7 +192,7 @@ class LoginPagePembeli extends StatelessWidget {
                             ..onTap = () {
                               Navigator.pushNamed(
                                 context,
-                                SignPageFileat.routeName,
+                                SignupScreen.routeName,
                               );
                             },
                         ),
@@ -210,8 +209,8 @@ class LoginPagePembeli extends StatelessWidget {
   }
 }
 
-class LoginPagePenjual extends StatelessWidget {
-  static const routeName = '/loginpagepenjual';
+class LoginScreenSeller extends StatelessWidget {
+  static const routeName = '/LoginScreenSeller';
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -219,7 +218,7 @@ class LoginPagePenjual extends StatelessWidget {
         preferredSize: Size.fromHeight(150),
         child: AppBar(
           leading: IconButton(
-            icon: Image.asset("images/assets/back_button.png",
+            icon: Image.asset("assets/images/assets/back_button.png",
                 width: 30, height: 30),
             onPressed: () {
               Navigator.pop(context);
@@ -360,7 +359,7 @@ class LoginPagePenjual extends StatelessWidget {
                     ),
                     IconButton(
                       onPressed: () {},
-                      icon: Image.asset("images/assets/Google_logo.png",
+                      icon: Image.asset("assets/images/assets/Google_logo.png",
                           width: 30, height: 30),
                     ),
                   ],
@@ -386,7 +385,7 @@ class LoginPagePenjual extends StatelessWidget {
                               // Navigator.push(
                               //   context,
                               //   MaterialPageRoute(
-                              //       builder: (context) => SignPageFileat()),
+                              //       builder: (context) => SignupScreen()),
                               // );
                             },
                         ),

@@ -1,22 +1,26 @@
+import 'package:fileats/providers/order_provider.dart';
 import 'package:flutter/material.dart';
-import 'package:fileats/pages/fileat_homepage1.dart';
-import 'package:fileats/pages/fileat_login_page.dart';
-import 'package:fileats/pages/fileat_sign_up.dart';
+import 'package:fileats/screens/home_screen.dart';
+import 'package:fileats/screens/login_screen.dart';
+import 'package:fileats/screens/signup_screen.dart';
 import 'package:provider/provider.dart';
-import 'pages/fileat_feed_model.dart';
+import 'providers/feed_provider.dart';
 
 void main() {
   runApp(
-    ChangeNotifierProvider(
-      create: (context) => FeedModel(),
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => FeedProvider()),
+        ChangeNotifierProvider(create: (_) => OrderProvider()), // ADD HERE
+      ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
         home: FileatSplashh(),
         routes: {
-          LoginPagePembeli.routeName: (context) => LoginPagePembeli(),
-          LoginPagePenjual.routeName: (context) => LoginPagePenjual(),
-          SignPageFileat.routeName: (context) => SignPageFileat(),
-          FileatHomePage1.routeName: (context) => FileatHomePage1(),
+          LoginScreenBuyer.routeName: (context) => LoginScreenBuyer(),
+          LoginScreenSeller.routeName: (context) => LoginScreenSeller(),
+          SignupScreen.routeName: (context) => SignupScreen(),
+          HomeScreen.routeName: (context) => HomeScreen(),
           FileatSplashh.routeName: (context) => FileatSplashh(),
         },
       ),
@@ -35,7 +39,7 @@ class FileatSplashh extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             SizedBox(height: 190),
-            Image.asset("images/assets/role.png"),
+            Image.asset("assets/images/assets/role.png"),
             SizedBox(height: 20),
             Text(
               "Gunakan Aplikasi",
@@ -61,7 +65,7 @@ class FileatSplashh extends StatelessWidget {
                 onPressed: () {
                   Navigator.pushNamed(
                     context,
-                    LoginPagePenjual.routeName,
+                    LoginScreenSeller.routeName,
                   );
                 },
                 style: ElevatedButton.styleFrom(
@@ -88,7 +92,7 @@ class FileatSplashh extends StatelessWidget {
                 onPressed: () {
                   Navigator.pushNamed(
                     context,
-                    LoginPagePembeli.routeName,
+                    LoginScreenBuyer.routeName,
                   );
                 },
                 style: ElevatedButton.styleFrom(
